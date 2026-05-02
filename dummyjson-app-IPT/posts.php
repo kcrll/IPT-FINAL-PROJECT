@@ -1,61 +1,81 @@
 <?php
 session_start();
-// Security: Redirect to login if no session exists
-if (!isset($_SESSION['user_id'])) { 
-    header("Location: login.php"); 
-    exit; 
-}
+if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit; }
 
-// API Source: https://dummyjson.com/posts
 $json = file_get_contents('https://dummyjson.com/posts');
-$data = json_decode($json, true); // Decode JSON data
+$data = json_decode($json, true);
 $posts = $data['posts'];
-
-include 'header.php';
 ?>
-
-<div style="margin-bottom: 20px;">
-    <h2>Community Posts</h2>
-    <p class="text-muted">Latest updates and stories from the DummyJSON API.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="navbar">
+<div id="logoutModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Confirm Logout</h3>
+        <p>Are you sure you want to leave? Your session will end.</p>
+        <div class="modal-buttons">
+            <a href="logout.php" class="btn-confirm">Yes, Logout</a>
+            <button onclick="closeModal()" class="btn-cancel">Stay Here</button>
+        </div>
+    </div>
 </div>
+    <a class="navbar-brand" href="dashboard.php" style="color: var(--primary); font-weight: bold; text-decoration: none;">SHOP NAME</a>
+    <div class="nav-links">
+        <a href="dashboard.php">Dashboard</a>
+        <a href="products.php">Products</a>
+        <a href="users.php">Users & Carts</a>
+        <a href="posts.php">Posts</a> 
+        <a href="#" class="btn-logout" onclick="openModal(event)">Logout</a>
+    </div>
+</nav>
 
-<div class="grid grid-cols-3">
-    <?php foreach($posts as $post): ?>
-    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
-        <div>
-            <!-- Display Post Title[cite: 1] -->
+<div class="container fade-in">
+    <div style="margin-bottom: 20px;">
+        <h2>Community Posts</h2>
+        <p class="text-muted">Latest updates and stories.</p>
+    </div>
+
+    <div class="grid grid-cols-3">
+        <?php foreach($posts as $post): ?>
+        <div class="card">
             <h3 style="font-size: 1.2rem; color: var(--primary); margin-bottom: 10px;">
                 <?= htmlspecialchars($post['title']) ?>
             </h3>
-            
-            <!-- Display Body (preview)[cite: 1] -->
             <p class="text-muted" style="margin-bottom: 15px; font-size: 0.95rem;">
-                <?= htmlspecialchars(substr($post['body'], 0, 120)) ?>...
+                <?= htmlspecialchars(substr($post['body'], 0, 120)) ?>
             </p>
-        </div>
-
-        <div>
-            <!-- Display Tags[cite: 1] -->
-            <div style="margin-bottom: 15px;">
-                <?php foreach($post['tags'] as $tag): ?>
-                    <span style="display: inline-block; background: #ebf2ff; color: #2563eb; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 5px;">
-                        #<?= htmlspecialchars($tag) ?>
-                    </span>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Display Reactions[cite: 1] -->
-            <div style="border-top: 1px solid var(--border); padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 0.9rem;">
-                    👍 <?= $post['reactions']['likes'] ?? $post['reactions'] ?> 
-                    <span style="margin-left: 10px;">👎 <?= $post['reactions']['dislikes'] ?? 0 ?></span>
-                </span>
-                <span class="text-muted" style="font-size: 0.8rem;">Views: <?= $post['views'] ?? 0 ?></span>
+            <div style="border-top: 1px solid var(--border); padding-top: 10px;">
+                <span style="font-size: 0.9rem;">👍 <?= $post['reactions']['likes'] ?? 0 ?></span>
             </div>
         </div>
+        <?php endforeach; ?>
     </div>
-    <?php endforeach; ?>
 </div>
+</body></html>
 
-</body>
-</html>
+
+<script> // logout
+const modal = document.getElementById('logoutModal');
+
+function openModal(event) {
+    event.preventDefault(); // Stop the logout link from working instantly
+    modal.style.display = 'flex'; // Show our custom design
+}
+
+function closeModal() {
+    modal.style.display = 'none'; // Hide the design if they cancel
+}
+
+// Close the modal if the user clicks outside the box
+window.onclick = function(event) {
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+</script>

@@ -2,7 +2,7 @@
 session_start();
 require 'config/db.php';
 $message = '';
-$success = false; // Flag to track successful registration
+$success = false; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = $_POST['fullname'];
@@ -14,25 +14,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($password !== $confirm) {
         $message = "<div class='alert alert-error'>Passwords do not match.</div>";
     } else {
-        // Apply password hashing as required
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("INSERT INTO users (fullname, email, username, password) VALUES (?, ?, ?, ?)");
         try {
             $stmt->execute([$fullname, $email, $username, $hashed_password]);
             $message = "<div class='alert alert-success'>Registration successful!</div>";
-            $success = true; // Trigger the appearance of the login button
+            $success = true; 
         } catch(PDOException $e) {
             $message = "<div class='alert alert-error'>Username or Email already exists.</div>";
         }
     }
 }
-include 'header.php';
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - DummyJSON App</title>
+
+     <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
 
 <div class="fade-in" style="max-width: 400px; margin: 40px auto;">
-    <!-- Back to index.php button[cite: 1] -->
     <div style="margin-bottom: 15px;">
-        <a href="index.php" style="color: #38bdf8; text-decoration: none; display: flex; align-items: center; gap: 5px; font-size: 0.9rem;">
+        <a href="index.php" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 5px; font-size: 0.9rem;">
             <span>&larr;</span> Back to Home
         </a>
     </div>
@@ -43,7 +50,6 @@ include 'header.php';
         <?= $message ?>
 
         <?php if (!$success): ?>
-            <!-- Only show form if registration hasn't succeeded yet[cite: 1] -->
             <form method="POST">
                 <div class="form-group"><input type="text" name="fullname" class="form-control" placeholder="Full Name" required></div>
                 <div class="form-group"><input type="email" name="email" class="form-control" placeholder="Email" required></div>
@@ -53,18 +59,20 @@ include 'header.php';
                 <button type="submit" class="btn btn-primary w-100">Submit</button>
             </form>
         <?php else: ?>
-            <!-- Show Login button only after successful submission[cite: 1] -->
+            <!-- Show Login button only after successful submission -->
             <div style="text-align: center; margin-top: 10px;">
                 <p class="text-muted" style="margin-bottom: 20px;">You may now access your account.</p>
                 <a href="login.php" class="btn btn-primary w-100" style="display: block; text-decoration: none;">Login Now</a>
             </div>
         <?php endif; ?>
         
-        <div style="text-align: center; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+        <div style="text-align: center; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
             <p class="text-muted" style="font-size: 0.85rem;">
-                Already have an account? <a href="login.php" style="color: #38bdf8;">Sign In</a>
+                Already have an account? <a href="login.php" style="color: var(--primary);">Login</a>
             </p>
         </div>
     </div>
 </div>
-</body></html>
+
+</body>
+</html>

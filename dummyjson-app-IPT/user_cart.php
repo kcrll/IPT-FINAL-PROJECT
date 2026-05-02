@@ -9,44 +9,73 @@ $carts = $data['carts'];
 
 $user_cart = null;
 foreach ($carts as $cart) {
-    if ($cart['userId'] == $user_id) {
-        $user_cart = $cart;
-        break;
-    }
+    if ($cart['userId'] == $user_id) { $user_cart = $cart; break; }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Cart</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="navbar">
+    <div id="logoutModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Confirm Logout</h3>
+        <p>Are you sure you want to leave? Your session will end.</p>
+        <div class="modal-buttons">
+            <a href="logout.php" class="btn-confirm">Yes, Logout</a>
+            <button onclick="closeModal()" class="btn-cancel">Stay Here</button>
+        </div>
+    </div>
+</div>
+    <a class="navbar-brand" href="dashboard.php" style="color: var(--primary); font-weight: bold; text-decoration: none;">SHOP NAME</a>
+    <div class="nav-links"><a href="#" class="btn-logout" onclick="openModal(event)">Logout</a>
+</nav>
+
+<div class="container fade-in">
+    <div style="margin-bottom: 20px;"><a href="users.php" class="btn btn-outline">&larr; Back to Users</a></div>
+    <?php if ($user_cart): ?>
+        <div class="card">
+            <h3>Cart Details</h3>
+            <p><strong>Total Amount:</strong> $<?= $user_cart['total'] ?></p>
+            <table class="table">
+                <thead><tr><th>Product Title</th><th>Quantity</th><th>Price</th></tr></thead>
+                <tbody>
+                    <?php foreach($user_cart['products'] as $item): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($item['title']) ?></td>
+                        <td><?= $item['quantity'] ?></td>
+                        <td>$<?= $item['price'] ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else: ?>
+        <div class="alert alert-error">No cart found for this user.</div>
+    <?php endif; ?>
+</div>
+</body></html>
+
+<script> // logout
+const modal = document.getElementById('logoutModal');
+
+function openModal(event) {
+    event.preventDefault(); // Stop the logout link from working instantly
+    modal.style.display = 'flex'; // Show our custom design
 }
 
-include 'header.php';
-?>
-<div style="margin-bottom: 20px;">
-    <a href="users.php" class="btn btn-outline">&larr; Back to Users</a>
-</div>
-<?php if ($user_cart): ?>
-    <div class="card">
-        <div style="background: var(--bg); padding: 15px; margin: -20px -20px 20px -20px; border-bottom: 1px solid var(--border); border-radius: 8px 8px 0 0;">
-            <h3>Cart Details</h3>
-            <p class="text-muted">Cart ID: <?= $user_cart['id'] ?> | User ID: <?= $user_cart['userId'] ?></p>
-        </div>
-        
-        <p><strong>Total Items:</strong> <?= $user_cart['totalProducts'] ?></p>
-        <p><strong>Total Amount:</strong> $<?= $user_cart['total'] ?></p>
-        
-        <table class="table">
-            <thead>
-                <tr><th>Product Title</th><th>Quantity</th><th>Price</th><th>Total per item</th></tr>
-            </thead>
-            <tbody>
-                <?php foreach($user_cart['products'] as $item): ?>
-                <tr>
-                    <td><?= htmlspecialchars($item['title']) ?></td>
-                    <td><?= $item['quantity'] ?></td>
-                    <td>$<?= $item['price'] ?></td>
-                    <td>$<?= $item['total'] ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-<?php else: ?>
-    <div class="alert alert-error">No cart found for this user.</div>
-<?php endif; ?>
-</body></html>
+function closeModal() {
+    modal.style.display = 'none'; // Hide the design if they cancel
+}
+
+// Close the modal if the user clicks outside the box
+window.onclick = function(event) {
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+</script>
