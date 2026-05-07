@@ -5,7 +5,6 @@ if (!isset($_SESSION['user_id'])) {
     exit; 
 }
 
-// Get the username from the session, or use 'Guest' if it's not set
 $username = $_SESSION['username'] ?? 'Guest';
 ?>
 <!DOCTYPE html>
@@ -28,7 +27,7 @@ $username = $_SESSION['username'] ?? 'Guest';
     </div>
 </div>
     <a class="navbar-brand" href="dashboard.php" style="color: var(--primary); font-weight: bold; text-decoration: none;">LORA</a>
-    <div class="nav-links">S
+    <div class="nav-links">
         <a href="dashboard.php">Dashboard</a>
         <a href="products.php">Products</a>
         <a href="users.php">Users & Carts</a>
