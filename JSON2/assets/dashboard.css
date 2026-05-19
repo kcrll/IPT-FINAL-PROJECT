@@ -1,0 +1,81 @@
+body {
+        font-family: 'Montserrat', sans-serif;
+}
+.dashboard-page {
+    background-image: url('Images/bg2.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    min-height: 100vh;
+
+}
+
+h1 {
+    color: white;
+    font-size: 40px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: block;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.dashboard-page .layout-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid transparent;
+    border-radius: var(--radius-lg);
+    padding: 30px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #000000;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    font-size: 3rem;
+    color: #003096;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-12px);
+    background: #ffffff;
+    border-color: #ff5900; /* Sharingan Red */
+    box-shadow: 0 20px 40px rgba(139, 0, 0, 0.25);
+}
+
+.card:hover .card-icon {
+    color: #ff5900;
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.card h3 {
+    margin: 10px 0;
+    font-size: 1.5rem;
+}
+
+.text-subtle {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    flex-grow: 1;
+}
+
+.button-primary {
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.card:hover .button-primary {
+    background: #ff5900;
+    transform: scale(1.02);
+}
+
